@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AptiQuiz - Quiz</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        .header,
+        .question-box,
+        .navigator,
+        .buttons {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,.08);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #category {
+            color: #2563eb;
+            font-weight: bold;
+        }
+
+        .option {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            text-align: left;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .option:hover {
+            border-color: #2563eb;
+        }
+
+        .selected {
+            background: #eaf1ff;
+            border-color: #2563eb;
+        }
+
+        .nav-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .nav-buttons button {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .current {
+            background: #2563eb;
+            color: white;
+        }
+
+        .answered {
+            background: #bbf7d0;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .buttons button {
+            padding: 13px 22px;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        #previous {
+            background: #ddd;
+        }
+
+        #skip {
+            background: #fef3c7;
+        }
+
+        #next {
+            background: #2563eb;
+            color: white;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+
+        <div>
+            <h1>AptiQuiz</h1>
+            <div id="category">Aptitude</div>
+        </div>
+
+        <strong id="counter">
+            Question 1 of 20
+        </strong>
+
+    </div>
+
+
+    <div class="question-box">
+
+        <h2 id="question">
+            Loading question...
+        </h2>
+
+        <div id="options"></div>
+
+    </div>
+
+
+    <div class="navigator">
+
+        <h3>Question Navigator</h3>
+
+        <div
+            id="navigator"
+            class="nav-buttons">
+        </div>
+
+    </div>
+
+
+    <div class="buttons">
+
+        <button id="previous">
+            ← Previous
+        </button>
+
+        <button id="skip">
+            Skip
+        </button>
+
+        <button id="next">
+            Next →
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+
+// ======================================
+// CHECK REGISTRATION
+// ======================================
+
+const participant =
+    localStorage.getItem("aptiquizParticipant");
+
+
+if (!participant) {
+
+    window.location.href = "register.html";
+
+}
+
+
+// ======================================
+// QUESTIONS
+// ======================================
+
+const questions = [
+
+    {
+        category: "Aptitude",
+        question: "What is 20% of 250?",
+        options: ["40", "50", "60", "70"],
+        answer: "50"
+    },
+
+    {
+        category: "Aptitude",
+        question: "A product costs ₹500 and is sold for ₹600. What is the profit percentage?",
+        options: ["10%", "15%", "20%", "25%"],
+        answer: "20%"
+    },
+
+    {
+        category: "Aptitude",
+        question: "What is the average of 10, 20 and 30?",
+        options: ["15", "20", "25", "30"],
+        answer: "20"
+    },
+
+    {
+        category: "Aptitude",
+        question: "The ratio of boys to girls is 3:2. If there are 30 boys, how many girls are there?",
+        options: ["15", "20", "25", "30"],
+        answer: "20"
+    },
+
+    {
+        category: "Aptitude",
+        question: "A car travels 120 km in 2 hours. What is its speed?",
+        options: ["40 km/h", "50 km/h", "60 km/h", "80 km/h"],
+        answer: "60 km/h"
+    },
+
+    {
+        category: "Aptitude",
+        question: "What is the simple interest on ₹1000 at 10% for 2 years?",
+        options: ["₹100", "₹150", "₹200", "₹250"],
+        answer: "₹200"
+    },
+
+    {
+        category: "Aptitude",
+        question: "5 workers complete a job in 12 days. How many days will 10 workers take?",
+        options: ["4 days", "6 days", "8 days", "10 days"],
+        answer: "6 days"
+    },
+
+    {
+        category: "Aptitude",
+        question: "A number increased by 25% becomes 100. What was the original number?",
+        options: ["75", "80", "85", "90"],
+        answer: "80"
+    },
+
+    {
+        category: "Aptitude",
+        question: "What is the probability of getting a Head when a fair coin is tossed?",
+        options: ["1/4", "1/2", "3/4", "1"],
+        answer: "1/2"
+    },
+
+    {
+        category: "Aptitude",
+        question: "A father is 30 and his son is 10. After how many years will the father be twice the son's age?",
+        options: ["5 years", "10 years", "15 years", "20 years"],
+        answer: "10 years"
+    },
+
+    {
+        category: "Aptitude",
+        question: "If 3 pens cost ₹45, how much will 8 pens cost?",
+        options: ["₹100", "₹110", "₹120", "₹135"],
+        answer: "₹120"
+    },
+
+    {
+        category: "Aptitude",
+        question: "Find the next number: 2, 4, 8, 16, ?",
+        options: ["24", "28", "32", "36"],
+        answer: "32"
+    },
+
+    {
+        category: "Logical Reasoning",
+        question: "Find the next number: 3, 6, 12, 24, ?",
+        options: ["36", "42", "48", "54"],
+        answer: "48"
+    },
+
+    {
+        category: "Logical Reasoning",
+        question: "If CAT is coded as DBU, how is DOG coded?",
+        options: ["EPH", "EOG", "FPH", "DPE"],
+        answer: "EPH"
+    },
+
+    {
+        category: "Logical Reasoning",
+        question: "A person walks north and then turns right. Which direction is the person from the starting point?",
+        options: ["North", "South-East", "North-East", "South-West"],
+        answer: "North-East"
+    },
+
+    {
+        category: "Logical Reasoning",
+        question: "Find the odd one out.",
+        options: ["Apple", "Mango", "Carrot", "Banana"],
+        answer: "Carrot"
+    },
+
+    {
+        category: "Logical Reasoning",
+        question: "All roses are flowers. Which statement is definitely true?",
+        options: [
+            "All flowers are roses",
+            "Some flowers are roses",
+            "Roses are flowers",
+            "No roses are flowers"
+        ],
+        answer: "Roses are flowers"
+    },
+
+    {
+        category: "Logical Reasoning",
+        question: "A is the brother of B. B is the sister of C. What is A's relation to C?",
+        options: ["Brother", "Sister", "Father", "Uncle"],
+        answer: "Brother"
+    },
+
+    {
+        category: "Logical Reasoning",
+        question: "Find the next number: 5, 10, 20, 40, ?",
+        options: ["60", "70", "80", "90"],
+        answer: "80"
+    },
+
+    {
+        category: "Logical Reasoning",
+        question: "Book is related to Reading in the same way as Fork is related to:",
+        options: ["Writing", "Eating", "Cooking", "Cutting"],
+        answer: "Eating"
+    }
+
+];
+
+
+// ======================================
+// VARIABLES
+// ======================================
+
+let current = 0;
+
+let answers =
+    new Array(questions.length).fill(null);
+
+
+// ======================================
+// HTML ELEMENTS
+// ======================================
+
+const questionElement =
+    document.getElementById("question");
+
+const categoryElement =
+    document.getElementById("category");
+
+const counterElement =
+    document.getElementById("counter");
+
+const optionsElement =
+    document.getElementById("options");
+
+const navigatorElement =
+    document.getElementById("navigator");
+
+const previousButton =
+    document.getElementById("previous");
+
+const skipButton =
+    document.getElementById("skip");
+
+const nextButton =
+    document.getElementById("next");
+
+
+// ======================================
+// DISPLAY QUESTION
+// ======================================
+
+function showQuestion() {
+
+    const q = questions[current];
+
+
+    categoryElement.textContent =
+        q.category;
+
+
+    counterElement.textContent =
+        `Question ${current + 1} of ${questions.length}`;
+
+
+    questionElement.textContent =
+        q.question;
+
+
+    optionsElement.innerHTML = "";
+
+
+    q.options.forEach(function(option) {
+
+        const button =
+            document.createElement("button");
+
+        button.className = "option";
+
+        button.textContent = option;
+
+
+        if (answers[current] === option) {
+
+            button.classList.add("selected");
+
+        }
+
+
+        button.onclick = function() {
+
+            answers[current] = option;
+
+            saveAnswers();
+
+            showQuestion();
+
+        };
+
+
+        optionsElement.appendChild(button);
+
+    });
+
+
+    previousButton.disabled =
+        current === 0;
+
+
+    if (current === questions.length - 1) {
+
+        nextButton.textContent =
+            "Submit Quiz ✓";
+
+    } else {
+
+        nextButton.textContent =
+            "Next →";
+
+    }
+
+
+    showNavigator();
+
+}
+
+
+// ======================================
+// NAVIGATOR
+// ======================================
+
+function showNavigator() {
+
+    navigatorElement.innerHTML = "";
+
+
+    questions.forEach(function(_, index) {
+
+        const button =
+            document.createElement("button");
+
+
+        button.textContent =
+            index + 1;
+
+
+        if (index === current) {
+
+            button.classList.add("current");
+
+        }
+
+        else if (answers[index] !== null) {
+
+            button.classList.add("answered");
+
+        }
+
+
+        button.onclick = function() {
+
+            current = index;
+
+            showQuestion();
+
+        };
+
+
+        navigatorElement.appendChild(button);
+
+    });
+
+}
+
+
+// ======================================
+// SAVE ANSWERS
+// ======================================
+
+function saveAnswers() {
+
+    localStorage.setItem(
+        "aptiquizAnswers",
+        JSON.stringify(answers)
+    );
+
+}
+
+
+// ======================================
+// NEXT
+// ======================================
+
+nextButton.onclick = function() {
+
+    if (current === questions.length - 1) {
+
+        submitQuiz();
+
+    } else {
+
+        current++;
+
+        showQuestion();
+
+    }
+
+};
+
+
+// ======================================
+// PREVIOUS
+// ======================================
+
+previousButton.onclick = function() {
+
+    if (current > 0) {
+
+        current--;
+
+        showQuestion();
+
+    }
+
+};
+
+
+// ======================================
+// SKIP
+// ======================================
+
+skipButton.onclick = function() {
+
+    answers[current] = null;
+
+    saveAnswers();
+
+
+    if (current < questions.length - 1) {
+
+        current++;
+
+    } else {
+
+        const unanswered =
+            answers.findIndex(
+                answer => answer === null
+            );
+
+        if (unanswered !== -1) {
+
+            current = unanswered;
+
+        }
+
+    }
+
+
+    showQuestion();
+
+};
+
+
+// ======================================
+// SUBMIT
+// ======================================
+
+function submitQuiz() {
+
+    const skipped =
+        answers.filter(
+            answer => answer === null
+        ).length;
+
+
+    if (skipped > 0) {
+
+        const confirmSubmit =
+            confirm(
+                `You have ${skipped} skipped question(s).\n\nSubmit anyway?`
+            );
+
+        if (!confirmSubmit) {
+
+            return;
+
+        }
+
+    }
+
+
+    let correct = 0;
+
+    let wrong = 0;
+
+    let aptitudeCorrect = 0;
+
+    let logicCorrect = 0;
+
+
+    questions.forEach(function(q, index) {
+
+        if (answers[index] === null) {
+
+            return;
+
+        }
+
+
+        if (answers[index] === q.answer) {
+
+            correct++;
+
+
+            if (q.category === "Aptitude") {
+
+                aptitudeCorrect++;
+
+            } else {
+
+                logicCorrect++;
+
+            }
+
+        } else {
+
+            wrong++;
+
+        }
+
+    });
+
+
+    const result = {
+
+        score: correct,
+
+        total: 20,
+
+        correct: correct,
+
+        wrong: wrong,
+
+        skipped: skipped,
+
+        aptitudeCorrect: aptitudeCorrect,
+
+        logicCorrect: logicCorrect,
+
+        answers: answers
+
+    };
+
+
+    localStorage.setItem(
+        "aptiquizResult",
+        JSON.stringify(result)
+    );
+
+
+    window.location.href =
+        "result.html";
+
+}
+
+
+// ======================================
+// START
+// ======================================
+
+showQuestion();
+
+</script>
+
+</body>
+</html>

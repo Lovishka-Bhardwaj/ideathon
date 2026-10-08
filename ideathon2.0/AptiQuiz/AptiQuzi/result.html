@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AptiQuiz Result</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            margin: 0;
+        }
+
+        .box {
+            max-width: 650px;
+            margin: 70px auto;
+            background: white;
+            padding: 40px;
+            text-align: center;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,.1);
+        }
+
+        .score {
+            font-size: 60px;
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 25px 0;
+        }
+
+        .stat {
+            padding: 20px;
+            background: #f4f7fb;
+            border-radius: 10px;
+        }
+
+        .stat strong {
+            display: block;
+            font-size: 25px;
+        }
+
+        button {
+            padding: 13px 25px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="box">
+
+    <h1>🏆 Quiz Completed!</h1>
+
+    <h2 id="name"></h2>
+
+    <p>Your Score</p>
+
+    <div class="score">
+        <span id="score">0</span>/20
+    </div>
+
+
+    <div class="stats">
+
+        <div class="stat">
+            <strong id="correct">0</strong>
+            Correct
+        </div>
+
+        <div class="stat">
+            <strong id="wrong">0</strong>
+            Wrong
+        </div>
+
+        <div class="stat">
+            <strong id="skipped">0</strong>
+            Skipped
+        </div>
+
+    </div>
+
+
+    <h2 id="badge"></h2>
+
+
+    <p>
+        Aptitude:
+        <strong id="aptitude">0</strong>/12
+    </p>
+
+    <p>
+        Logical Reasoning:
+        <strong id="logic">0</strong>/8
+    </p>
+
+
+    <br>
+
+    <button onclick="goHome()">
+        Back to Home
+    </button>
+
+</div>
+
+
+<script>
+
+const participantData =
+    localStorage.getItem("aptiquizParticipant");
+
+const resultData =
+    localStorage.getItem("aptiquizResult");
+
+
+if (!participantData || !resultData) {
+
+    window.location.href = "index.html";
+
+}
+
+
+const participant =
+    JSON.parse(participantData);
+
+const result =
+    JSON.parse(resultData);
+
+
+document.getElementById("name").textContent =
+    `Well done, ${participant.name}!`;
+
+
+document.getElementById("score").textContent =
+    result.score;
+
+
+document.getElementById("correct").textContent =
+    result.correct;
+
+
+document.getElementById("wrong").textContent =
+    result.wrong;
+
+
+document.getElementById("skipped").textContent =
+    result.skipped;
+
+
+document.getElementById("aptitude").textContent =
+    result.aptitudeCorrect;
+
+
+document.getElementById("logic").textContent =
+    result.logicCorrect;
+
+
+// Badge
+
+if (result.score >= 18) {
+
+    document.getElementById("badge").textContent =
+        "👑 Legendary Mind";
+
+}
+else if (result.score >= 15) {
+
+    document.getElementById("badge").textContent =
+        "⚡ Aptitude Master";
+
+}
+else if (result.score >= 12) {
+
+    document.getElementById("badge").textContent =
+        "🔥 Logic Warrior";
+
+}
+else if (result.score >= 8) {
+
+    document.getElementById("badge").textContent =
+        "💎 Rising Star";
+
+}
+else {
+
+    document.getElementById("badge").textContent =
+        "🎯 Comeback Badge";
+
+}
+
+
+function goHome() {
+
+    window.location.href =
+        "index.html";
+
+}
+
+</script>
+
+</body>
+</html>

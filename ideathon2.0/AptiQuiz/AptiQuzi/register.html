@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Registration - AptiQuiz</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            margin: 0;
+        }
+
+        .box {
+            max-width: 600px;
+            margin: 50px auto;
+            background: white;
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,.1);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="box">
+
+    <h1>Participant Registration</h1>
+
+    <form id="registrationForm">
+
+        <div class="group">
+            <label>Full Name</label>
+            <input type="text" id="name" required>
+        </div>
+
+        <div class="group">
+            <label>Email</label>
+            <input type="email" id="email" required>
+        </div>
+
+        <div class="group">
+            <label>Mobile</label>
+            <input type="tel" id="mobile" required>
+        </div>
+
+        <div class="group">
+            <label>College</label>
+            <input type="text" id="college" required>
+        </div>
+
+        <div class="group">
+            <label>Branch</label>
+            <input type="text" id="branch" required>
+        </div>
+
+        <div class="group">
+            <label>Year</label>
+            <input type="text" id="year" required>
+        </div>
+
+        <br>
+
+        <label>
+            <input type="checkbox" id="agree" required>
+            I confirm that the information is correct.
+        </label>
+
+        <br><br>
+
+        <button type="submit">
+            Continue to Quiz →
+        </button>
+
+    </form>
+
+</div>
+
+
+<script>
+
+document
+.getElementById("registrationForm")
+.addEventListener("submit", function(event) {
+
+    event.preventDefault();
+
+    const participant = {
+
+        name:
+            document.getElementById("name").value.trim(),
+
+        email:
+            document.getElementById("email").value.trim(),
+
+        mobile:
+            document.getElementById("mobile").value.trim(),
+
+        college:
+            document.getElementById("college").value.trim(),
+
+        branch:
+            document.getElementById("branch").value.trim(),
+
+        year:
+            document.getElementById("year").value.trim()
+
+    };
+
+
+    localStorage.setItem(
+        "aptiquizParticipant",
+        JSON.stringify(participant)
+    );
+
+
+    // Start a fresh quiz
+    localStorage.removeItem("aptiquizAnswers");
+    localStorage.removeItem("aptiquizResult");
+
+
+    window.location.href = "quiz.html";
+
+});
+
+</script>
+
+</body>
+</html>

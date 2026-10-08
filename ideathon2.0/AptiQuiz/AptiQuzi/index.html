@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AptiQuiz</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            margin: 0;
+        }
+
+        .box {
+            max-width: 600px;
+            margin: 100px auto;
+            background: white;
+            padding: 40px;
+            text-align: center;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,.1);
+        }
+
+        h1 {
+            font-size: 40px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 25px;
+            margin-top: 20px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="box">
+
+    <h1>🧠 AptiQuiz</h1>
+
+    <h2>Think Fast. Think Smart.</h2>
+
+    <p>
+        Test your Aptitude and Logical Reasoning skills.
+    </p>
+
+    <p>
+        <b>20 Questions</b> |
+        <b>12 Aptitude</b> |
+        <b>8 Logical</b>
+    </p>
+
+    <button class="btn" onclick="startQuiz()">
+        Start Quiz →
+    </button>
+
+</div>
+
+<script>
+
+function startQuiz() {
+
+    const participant =
+        localStorage.getItem("aptiquizParticipant");
+
+    if (participant) {
+
+        window.location.href = "quiz.html";
+
+    } else {
+
+        window.location.href = "register.html";
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>
